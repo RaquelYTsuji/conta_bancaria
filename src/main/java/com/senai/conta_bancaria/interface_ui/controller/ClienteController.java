@@ -1,6 +1,7 @@
 package com.senai.conta_bancaria.interface_ui.controller;
 
 import com.senai.conta_bancaria.application.dto.ClienteDTO;
+import com.senai.conta_bancaria.application.dto.CriarClienteDTO;
 import com.senai.conta_bancaria.application.service.ClienteService;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +17,7 @@ public class ClienteController {
     }
 
     @PostMapping
-    public ClienteDTO salvarCliente(@RequestBody ClienteDTO dto) {
+    public ClienteDTO salvarCliente(@RequestBody CriarClienteDTO dto) {
         return clienteService.salvarCliente(dto);
     }
 

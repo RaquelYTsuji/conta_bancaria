@@ -11,6 +11,7 @@ public class Conta {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
     @NotNull(message = "numero não pode ser nulo")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer numero;
     @NotNull(message = "saldo não pode ser nulo")
     private Double saldo;
