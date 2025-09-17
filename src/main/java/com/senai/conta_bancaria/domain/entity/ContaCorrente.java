@@ -1,16 +1,24 @@
 package com.senai.conta_bancaria.domain.entity;
 
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
-@EqualsAndHashCode(callSuper = true)
+import java.math.BigDecimal;
+
 @Entity
-@Data
+@EqualsAndHashCode(callSuper = true)
+@AllArgsConstructor
+@NoArgsConstructor
+@SuperBuilder
+@DiscriminatorValue("CORRENTE")
 public class ContaCorrente extends Conta{
+    @Column(precision = 19, scale = 2)
     @NotNull(message = "limite não pode ser nulo")
-    private Double limite;
+    private BigDecimal limite;
+
+    @Column(precision = 19, scale = 4)
     @NotNull(message = "taxa não pode ser nulo")
-    private Double taxa;
+    private BigDecimal taxa;
 }

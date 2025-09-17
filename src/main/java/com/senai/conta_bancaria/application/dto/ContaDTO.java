@@ -4,11 +4,13 @@ import com.senai.conta_bancaria.domain.entity.Cliente;
 import com.senai.conta_bancaria.domain.entity.Conta;
 import com.senai.conta_bancaria.domain.entity.TipoConta;
 
+import java.math.BigDecimal;
+
 public record ContaDTO(
         TipoConta tipoConta,
         String id,
-        Integer numero,
-        Double saldo,
+        String numero,
+        BigDecimal saldo,
         String clienteId,
         Double limite,
         Double taxa,
@@ -28,10 +30,10 @@ public record ContaDTO(
         );
     }
 
-    public Conta toEntity(Cliente cliente) {
-        Conta conta = new Conta();
-        conta.setSaldo(this.saldo);
-        conta.setCliente(cliente);
-        return conta;
-    }
+//    public Conta toEntity(Cliente cliente) {
+//        Conta conta = new Conta();
+//        conta.setSaldo(this.saldo);
+//        conta.setCliente(cliente);
+//        return conta;
+//    }
 }
