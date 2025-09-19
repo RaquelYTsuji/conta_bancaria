@@ -1,11 +1,6 @@
 package com.senai.conta_bancaria.interface_ui.controller;
 
-import com.senai.conta_bancaria.application.dto.ContaDTO;
-import com.senai.conta_bancaria.application.dto.ValorDTO;
-import com.senai.conta_bancaria.application.service.ContaService;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/conta")
