@@ -15,10 +15,13 @@ import java.math.BigDecimal;
 @DiscriminatorValue("CORRENTE")
 public class ContaCorrente extends Conta{
     @Column(precision = 19, scale = 2)
-    @NotNull(message = "limite não pode ser nulo")
     private BigDecimal limite;
 
     @Column(precision = 19, scale = 4)
-    @NotNull(message = "taxa não pode ser nulo")
     private BigDecimal taxa;
+
+    @Override
+    public TipoConta getTipo() {
+        return TipoConta.CONTA_CORRENTE;
+    }
 }

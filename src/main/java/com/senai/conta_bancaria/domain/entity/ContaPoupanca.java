@@ -17,6 +17,10 @@ import java.math.BigDecimal;
 @DiscriminatorValue("POUPANCA")
 public class ContaPoupanca extends Conta{
     @Column(precision = 10, scale = 4)
-    @NotNull(message = "rendimento não pode ser nulo")
     private BigDecimal rendimento;
+
+    @Override
+    public TipoConta getTipo() {
+        return TipoConta.CONTA_POUPANCA;
+    }
 }
