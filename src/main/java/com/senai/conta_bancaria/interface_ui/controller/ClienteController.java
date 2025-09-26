@@ -29,18 +29,19 @@ public class ClienteController {
         return ResponseEntity.ok(clienteService.listarClientesAtivos());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ClienteResponseDTO> buscarCliente(@PathVariable String id) {
-        return ResponseEntity.ok(clienteService.buscarClientePorId(id));
+    @GetMapping("/cpf/{cpf}")
+    public ResponseEntity<ClienteResponseDTO> buscarClienteAtivoPorCpf(@PathVariable String cpf) {
+        return ResponseEntity.ok(clienteService.buscarClienteAtivoPorCpf(cpf));
     }
 
-//    @PutMapping("/{id}")
-//    public ClienteDTO atualizarCliente(@PathVariable String id, @RequestBody ClienteDTO dto) {
-//        return clienteService.atualizarCliente(id, dto);
-//    }
+    @PutMapping("/cpf/{cpf}")
+    public ResponseEntity<ClienteResponseDTO> atualizarClientePorCpf(@PathVariable String cpf, @RequestBody ClienteRegistroDTO dto) {
+        return ResponseEntity.ok(clienteService.atualizarCliente(cpf, dto));
+    }
 
-    @DeleteMapping("/{id}")
-    public void deletarCliente(@PathVariable String id) {
-        clienteService.deletarCliente(id);
+    @DeleteMapping("/cpf/{cpf}")
+    public ResponseEntity<Void> desativarCliente(@PathVariable String cpf) {
+        clienteService.desativarCliente(cpf);
+        return ResponseEntity.noContent().build();
     }
 }

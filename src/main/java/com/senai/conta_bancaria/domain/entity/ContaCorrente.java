@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 
 @Entity
 @EqualsAndHashCode(callSuper = true)
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder

@@ -43,25 +43,31 @@ public class ClienteService {
     }
 
     @Transactional(readOnly = true)
-    public ClienteResponseDTO buscarClientePorId(String id) {
-        Cliente cliente = clienteRepository.findById(id).orElse(null);
+    public ClienteResponseDTO buscarClienteAtivoPorCpf(String cpf) {
+        Cliente cliente = buscarClientePorCpfEAtivoTrue(cpf);
         return ClienteResponseDTO.fromEntity(cliente);
     }
 
-//    public ClienteDTO atualizarCliente(String id, ClienteDTO dto) {
-//        Optional<Cliente> clienteOptional = clienteRepository.findById(id);
-//        if (clienteOptional.isEmpty()) return null;
-//
-//        Cliente existente = clienteOptional.get();
-//        existente.setNome(dto.nome());
-//        existente.setCpf(dto.cpf());
-//        existente.setContas(dto.contas());
-//
-//        Cliente atualizado = clienteRepository.save(existente);
-//        return ClienteDTO.fromEntity(atualizado);
-//    }
+    public ClienteResponseDTO atualizarCliente(String cpf, ClienteRegistroDTO dto) {
+        Cliente cliente = buscarClientePorCpfEAtivoTrue(cpf);
 
-    public void deletarCliente(String id) {
-        clienteRepository.deleteById(id);
+        cliente.setNome(dto.nome());
+        cliente.setCpf(dto.cpf());
+
+        Cliente atualizado = clienteRepository.save(cliente);
+        return ClienteResponseDTO.fromEntity(atualizado);
+    }
+
+    public void desativarCliente(String cpf) {
+        Cliente cliente = buscarClientePorCpfEAtivoTrue(cpf);
+
+        cliente.setAtivo(false);
+        cliente.getContas().forEach(conta -> conta.setAtiva(false));
+        clienteRepository.save(cliente);
+    }
+
+    private Cliente buscarClientePorCpfEAtivoTrue(String cpf){
+        return clienteRepository.findByCpfAndAtivoTrue(cpf).orElseThrow(
+                () -> new RuntimeException("Cliente não encontrado"));
     }
 }
