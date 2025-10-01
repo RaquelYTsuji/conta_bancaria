@@ -2,6 +2,8 @@ package com.senai.conta_bancaria.interface_ui.controller;
 
 import com.senai.conta_bancaria.application.dto.ContaAtualizarDTO;
 import com.senai.conta_bancaria.application.dto.ContaResumoDTO;
+import com.senai.conta_bancaria.application.dto.TransferenciaDTO;
+import com.senai.conta_bancaria.application.dto.ValorSaqueDepositoDTO;
 import com.senai.conta_bancaria.application.service.ContaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -30,18 +32,24 @@ public class ContaController {
         return ResponseEntity.ok(contaService.atualizarConta(numero, dto));
     }
 
-//    @PutMapping("/depositar/{id}")
-//    public ContaDTO depositar(@PathVariable String id, @RequestBody ValorDTO dto) {
-//        return contaService.depositar(id, dto);
-//    }
-//
-//    @PutMapping("/sacar/{numero}/{valor}")
-//    public ContaResumoDTO sacar(@PathVariable String numero, @PathVariable BigDecimal valor) {
-//        return contaService.sacar(numero, valor);
-//    }
-//
-//    @DeleteMapping("/{id}")
-//    public void deletarConta(@PathVariable String id) {
-//        contaService.deletarConta(id);
-//    }
+    @PostMapping("/numero/{numero}/sacar")
+    public ResponseEntity<ContaResumoDTO> sacar(@PathVariable String numero, @RequestBody ValorSaqueDepositoDTO valor) {
+        return ResponseEntity.ok(contaService.sacar(numero, valor));
+    }
+
+    @PostMapping("/numero/{numero}/depositar")
+    public ResponseEntity<ContaResumoDTO> depositar(@PathVariable String numero, @RequestBody ValorSaqueDepositoDTO dto) {
+        return ResponseEntity.ok(contaService.depositar(numero, dto));
+    }
+
+    @PostMapping("/numero/{numero}/transferir")
+    public ResponseEntity<ContaResumoDTO> transferir(@PathVariable String numero, @RequestBody TransferenciaDTO dto) {
+        return ResponseEntity.ok(contaService.transferir(numero, dto));
+    }
+
+    @DeleteMapping("/numero/{numero}")
+    public ResponseEntity<Void> desativarConta(@PathVariable String numero) {
+        contaService.desativarConta(numero);
+        return ResponseEntity.noContent().build();
+    }
 }

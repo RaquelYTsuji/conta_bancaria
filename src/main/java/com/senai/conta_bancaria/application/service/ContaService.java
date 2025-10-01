@@ -2,6 +2,8 @@ package com.senai.conta_bancaria.application.service;
 
 import com.senai.conta_bancaria.application.dto.ContaAtualizarDTO;
 import com.senai.conta_bancaria.application.dto.ContaResumoDTO;
+import com.senai.conta_bancaria.application.dto.TransferenciaDTO;
+import com.senai.conta_bancaria.application.dto.ValorSaqueDepositoDTO;
 import com.senai.conta_bancaria.domain.entity.Conta;
 import com.senai.conta_bancaria.domain.entity.ContaCorrente;
 import com.senai.conta_bancaria.domain.entity.ContaPoupanca;
@@ -29,13 +31,12 @@ public class ContaService {
 
     @Transactional(readOnly = true)
     public ContaResumoDTO buscarContaPorNumero(String numero) {
-        Conta conta = buscarContaPorNumeroEAtivoTrue(numero);
+        var conta = buscarContaPorNumeroEAtivoTrue(numero);
         return ContaResumoDTO.fromEntity(conta);
     }
 
     public ContaResumoDTO atualizarConta(String numero, ContaAtualizarDTO dto) {
-        var conta = contaRepository.findByNumeroAndAtivaTrue(numero).orElseThrow(
-                () -> new RuntimeException("Conta não encontrada"));
+        var conta = buscarContaPorNumeroEAtivoTrue(numero);
 
         conta.setSaldo(dto.saldo());
 
@@ -50,27 +51,32 @@ public class ContaService {
 
         return ContaResumoDTO.fromEntity(contaRepository.save(conta));
     }
-//
-//    public ContaDTO depositar(String id, ValorDTO dto){
-//        Optional<Conta> contaOptional = contaRepository.findById(id);
-//        if (contaOptional.isEmpty()) return null;
-//
-//        Conta existente = contaOptional.get();
-//        existente.setSaldo(existente.getSaldo() + dto.valor());
-//
-//        return ContaDTO.fromEntity(existente);
-//    }
-//
-//    public ContaResumoDTO sacar(String numero, BigDecimal valor){
-//        Conta conta = buscarContaPorNumeroEAtivoTrue(numero);
-//        conta.setSaldo(conta.getSaldo().subtract(valor));
-//
-//        return ContaResumoDTO.fromEntity(conta);
-//    }
-//
-//    public void deletarConta(String id) {
-//        contaRepository.deleteById(id);
-//    }
+
+    public ContaResumoDTO sacar(String numero, ValorSaqueDepositoDTO dto){
+        Conta conta = buscarContaPorNumeroEAtivoTrue(numero);
+        conta.sacar(dto.valor());
+        return ContaResumoDTO.fromEntity(contaRepository.save(conta));
+    }
+
+    public ContaResumoDTO depositar(String numero, ValorSaqueDepositoDTO dto){
+        var conta = buscarContaPorNumeroEAtivoTrue(numero);
+        conta.depositar(dto.valor());
+        return ContaResumoDTO.fromEntity(contaRepository.save(conta));
+    }
+
+    public ContaResumoDTO transferir(String numero, TransferenciaDTO dto){
+        var conta = buscarContaPorNumeroEAtivoTrue(numero);
+        var contaDestino = buscarContaPorNumeroEAtivoTrue(dto.numeroContaDestino());
+        conta.transferir(contaDestino, dto.valor());
+        contaRepository.save(contaDestino);
+        return ContaResumoDTO.fromEntity(contaRepository.save(conta));
+    }
+
+    public void desativarConta(String numero) {
+        var conta = buscarContaPorNumeroEAtivoTrue(numero);
+        conta.setAtiva(false);
+        contaRepository.save(conta);
+    }
 
     private Conta buscarContaPorNumeroEAtivoTrue(String numero){
         return contaRepository.findByNumeroAndAtivaTrue(numero).orElseThrow(
