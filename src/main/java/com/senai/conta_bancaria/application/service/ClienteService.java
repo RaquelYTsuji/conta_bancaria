@@ -3,6 +3,7 @@ package com.senai.conta_bancaria.application.service;
 import com.senai.conta_bancaria.application.dto.ClienteRegistroDTO;
 import com.senai.conta_bancaria.application.dto.ClienteResponseDTO;
 import com.senai.conta_bancaria.domain.entity.Cliente;
+import com.senai.conta_bancaria.domain.exceptions.EntidadeNaoEncontradaException;
 import com.senai.conta_bancaria.domain.repository.ClienteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -68,6 +69,6 @@ public class ClienteService {
 
     private Cliente buscarClientePorCpfEAtivoTrue(String cpf){
         return clienteRepository.findByCpfAndAtivoTrue(cpf).orElseThrow(
-                () -> new RuntimeException("Cliente não encontrado"));
+                () -> new EntidadeNaoEncontradaException("Cliente"));
     }
 }

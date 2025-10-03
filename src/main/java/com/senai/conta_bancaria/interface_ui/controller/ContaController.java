@@ -47,6 +47,11 @@ public class ContaController {
         return ResponseEntity.ok(contaService.transferir(numero, dto));
     }
 
+    @PostMapping("/numero/{numero}/rendimento")
+    public ResponseEntity<ContaResumoDTO> aplicarRendimento(@PathVariable String numero) {
+        return ResponseEntity.ok(contaService.aplicarRendimento(numero));
+    }
+
     @DeleteMapping("/numero/{numero}")
     public ResponseEntity<Void> desativarConta(@PathVariable String numero) {
         contaService.desativarConta(numero);

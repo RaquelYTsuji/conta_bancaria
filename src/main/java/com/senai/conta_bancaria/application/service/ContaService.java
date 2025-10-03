@@ -8,6 +8,8 @@ import com.senai.conta_bancaria.domain.entity.Conta;
 import com.senai.conta_bancaria.domain.entity.ContaCorrente;
 import com.senai.conta_bancaria.domain.entity.ContaPoupanca;
 import com.senai.conta_bancaria.domain.entity.TipoConta;
+import com.senai.conta_bancaria.domain.exceptions.EntidadeNaoEncontradaException;
+import com.senai.conta_bancaria.domain.exceptions.RendimentoInvalidoException;
 import com.senai.conta_bancaria.domain.repository.ContaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -72,6 +74,15 @@ public class ContaService {
         return ContaResumoDTO.fromEntity(contaRepository.save(conta));
     }
 
+    public ContaResumoDTO aplicarRendimento(String numero){
+        var conta = buscarContaPorNumeroEAtivoTrue(numero);
+        if (conta instanceof ContaPoupanca contaPoupanca){
+            contaPoupanca.aplicarRendimento();
+            return ContaResumoDTO.fromEntity(contaRepository.save(conta));
+        }
+        throw new RendimentoInvalidoException();
+    }
+
     public void desativarConta(String numero) {
         var conta = buscarContaPorNumeroEAtivoTrue(numero);
         conta.setAtiva(false);
@@ -80,6 +91,6 @@ public class ContaService {
 
     private Conta buscarContaPorNumeroEAtivoTrue(String numero){
         return contaRepository.findByNumeroAndAtivaTrue(numero).orElseThrow(
-                () -> new RuntimeException("Conta não encontrada"));
+                () -> new EntidadeNaoEncontradaException("Conta"));
     }
 }

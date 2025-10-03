@@ -16,6 +16,8 @@ public record ContaResumoDTO(
                     .saldo(this.saldo)
                     .ativa(true)
                     .cliente(cliente)
+                    .limite(new BigDecimal("500.000"))
+                    .taxa(new BigDecimal("0.05"))
                     .build();
         } else if(tipoConta == TipoConta.CONTA_POUPANCA){
             return ContaPoupanca.builder()
@@ -23,6 +25,7 @@ public record ContaResumoDTO(
                     .saldo(this.saldo)
                     .ativa(true)
                     .cliente(cliente)
+                    .rendimento(new BigDecimal("0.01"))
                     .build();
         }
         return null;
