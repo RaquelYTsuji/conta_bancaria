@@ -3,6 +3,7 @@ package com.senai.conta_bancaria.application.service;
 import com.senai.conta_bancaria.application.dto.ClienteRegistroDTO;
 import com.senai.conta_bancaria.application.dto.ClienteResponseDTO;
 import com.senai.conta_bancaria.domain.entity.Cliente;
+import com.senai.conta_bancaria.domain.exceptions.ContaTipoDuplicadoException;
 import com.senai.conta_bancaria.domain.exceptions.EntidadeNaoEncontradaException;
 import com.senai.conta_bancaria.domain.repository.ClienteRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,7 @@ public class ClienteService {
                 .equals(novaConta.getClass()) && c.isAtiva());
 
         if(temTipo)
-            throw new RuntimeException("Cliente já possui uma conta ativa deste tipo");
+            throw new ContaTipoDuplicadoException();
 
         cliente.getContas().add(novaConta);
 
