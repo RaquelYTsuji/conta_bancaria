@@ -3,7 +3,7 @@ package com.senai.conta_bancaria.application.service;
 import com.senai.conta_bancaria.application.dto.ClienteRegistroDTO;
 import com.senai.conta_bancaria.application.dto.ClienteResponseDTO;
 import com.senai.conta_bancaria.domain.entity.Cliente;
-import com.senai.conta_bancaria.domain.exceptions.ContaTipoDuplicadoException;
+import com.senai.conta_bancaria.domain.exceptions.ContaMesmoTipoException;
 import com.senai.conta_bancaria.domain.exceptions.EntidadeNaoEncontradaException;
 import com.senai.conta_bancaria.domain.repository.ClienteRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +29,7 @@ public class ClienteService {
                 .equals(novaConta.getClass()) && c.isAtiva());
 
         if(temTipo)
-            throw new ContaTipoDuplicadoException();
+            throw new ContaMesmoTipoException();
 
         cliente.getContas().add(novaConta);
 
@@ -46,8 +46,7 @@ public class ClienteService {
 
     @Transactional(readOnly = true)
     public ClienteResponseDTO buscarClienteAtivoPorCpf(String cpf) {
-        Cliente cliente = buscarClientePorCpfEAtivoTrue(cpf);
-        return ClienteResponseDTO.fromEntity(cliente);
+        return ClienteResponseDTO.fromEntity(buscarClientePorCpfEAtivoTrue(cpf));
     }
 
     public ClienteResponseDTO atualizarCliente(String cpf, ClienteRegistroDTO dto) {
