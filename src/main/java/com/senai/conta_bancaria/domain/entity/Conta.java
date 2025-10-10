@@ -31,12 +31,9 @@ public abstract class Conta {
     private String id;
 
     @Column(nullable = false, length = 20)
-    @Size(max = 20, message = "numero não pode ser maior que 20 caracteres")
-    @NotBlank(message = "numero não pode ser vazio")
     private String numero;
 
     @Column(nullable = false, precision = 19, scale = 2) //precision = tamanho, scale = casas decimais
-    @NotNull(message = "saldo não pode ser nulo")
     private BigDecimal saldo;
 
     @Column(nullable = false)

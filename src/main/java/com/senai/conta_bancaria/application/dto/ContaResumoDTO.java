@@ -2,12 +2,22 @@ package com.senai.conta_bancaria.application.dto;
 
 import com.senai.conta_bancaria.domain.entity.*;
 import com.senai.conta_bancaria.domain.exceptions.TipoDeContaInvalidaException;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
 
 public record ContaResumoDTO(
+        @NotNull
+        @NotBlank
         TipoConta tipoConta,
+        @NotNull
+        @NotBlank
+        @Size(max = 20)
         String numero,
+        @NotNull
+        @NotBlank
         BigDecimal saldo
 ) {
     public Conta toEntity(Cliente cliente) {
