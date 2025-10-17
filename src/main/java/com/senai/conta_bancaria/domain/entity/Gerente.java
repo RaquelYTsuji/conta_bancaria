@@ -10,16 +10,14 @@ import java.util.List;
 
 @Entity
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+//@AllArgsConstructor
 @SuperBuilder
-@DiscriminatorValue("CLIENTE")
-public class Cliente extends Usuario{
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
-    private List<Conta> contas;
+@DiscriminatorValue("ADMIN")
+public class Gerente extends Usuario{
 
     @Override
     public TipoUsuario getTipo() {
-        return TipoUsuario.CLIENTE;
+        return TipoUsuario.ADMIN;
     }
 }

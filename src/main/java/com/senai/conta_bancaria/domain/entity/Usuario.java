@@ -11,7 +11,9 @@ import lombok.experimental.SuperBuilder;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Usuario {
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "tipo_usuario", discriminatorType = DiscriminatorType.STRING, length = 20)
+public abstract class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     protected String id;
@@ -25,5 +27,8 @@ public class Usuario {
     @Column(nullable = false)
     protected String senha;
 
+    @Column(nullable = false)
+    private boolean ativo;
 
+    public abstract TipoUsuario getTipo();
 }

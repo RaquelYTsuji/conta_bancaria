@@ -3,7 +3,7 @@ package com.senai.conta_bancaria.infrastructure.security;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import lombok.Value;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -23,18 +23,18 @@ public class JwtService {
         this.expirationSeconds = expirationSeconds;
     }
 
-    public String generateToken(String email, String role) {
+    public String generateToken(String cpf, String tipoUsuario) {
         Instant now = Instant.now();
         return Jwts.builder()
-                .setSubject(email)
-                .claim("role", role)
+                .setSubject(cpf)
+                .claim("tipoUsuario", tipoUsuario)
                 .setIssuedAt(Date.from(now))
                 .setExpiration(Date.from(now.plusSeconds(expirationSeconds)))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    public String extractEmail(String token) {
+    public String extractCpf(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
@@ -43,17 +43,17 @@ public class JwtService {
                 .getSubject();
     }
 
-    public String extractRole(String token) {
+    public String extractTipo(String token) {
         return (String) Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
-                .get("role");
+                .get("tipoUsuario");
     }
     public boolean isTokenValid(String token, UserDetails userDetails) {
-        final String email = extractEmail(token);
-        return (email.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        final String cpf = extractCpf(token);
+        return (cpf.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
     private boolean isTokenExpired(String token) {
