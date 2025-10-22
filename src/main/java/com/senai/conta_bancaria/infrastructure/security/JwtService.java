@@ -23,11 +23,11 @@ public class JwtService {
         this.expirationSeconds = expirationSeconds;
     }
 
-    public String generateToken(String cpf, String tipoUsuario) {
+    public String generateToken(String cpf, String role) {
         Instant now = Instant.now();
         return Jwts.builder()
                 .setSubject(cpf)
-                .claim("tipoUsuario", tipoUsuario)
+                .claim("role", role)
                 .setIssuedAt(Date.from(now))
                 .setExpiration(Date.from(now.plusSeconds(expirationSeconds)))
                 .signWith(key, SignatureAlgorithm.HS256)
@@ -49,7 +49,7 @@ public class JwtService {
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
-                .get("tipoUsuario");
+                .get("role");
     }
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String cpf = extractCpf(token);

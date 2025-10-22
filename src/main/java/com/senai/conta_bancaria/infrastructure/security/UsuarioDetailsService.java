@@ -24,7 +24,7 @@ public class UsuarioDetailsService implements UserDetailsService {
         return new User(
                 usuario.getCpf(),
                 usuario.getSenha(),
-                List.of(new SimpleGrantedAuthority("TIPO_USUARIO_" + usuario.getTipo()))
+                List.of(new SimpleGrantedAuthority("ROLE_" + usuario.getTipo()))
         );
     }
 }
