@@ -1,10 +1,14 @@
 package com.senai.conta_bancaria.interface_ui.controller;
 
-import com.senai.conta_bancaria.application.dto.ContaAtualizarDTO;
-import com.senai.conta_bancaria.application.dto.ContaResumoDTO;
-import com.senai.conta_bancaria.application.dto.TransferenciaDTO;
-import com.senai.conta_bancaria.application.dto.ValorSaqueDepositoDTO;
+import com.senai.conta_bancaria.application.dto.*;
 import com.senai.conta_bancaria.application.service.ContaService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,12 +16,20 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "Conta", description = "Gerenciamento de contas dos clientes do banco")
 @RestController
 @RequestMapping("/conta")
 @RequiredArgsConstructor
 public class ContaController {
     private final ContaService contaService;
 
+    @Operation(
+            summary = "Listar todas as contas ativas",
+            description = "Retorna todos as contas cadastradas",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Lista retornada com sucesso")
+            }
+    )
     @GetMapping
     public ResponseEntity<List<ContaResumoDTO>> listarConta() {
         return ResponseEntity.ok(contaService.listarConta());
