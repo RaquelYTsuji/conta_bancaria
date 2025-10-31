@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Data
@@ -18,16 +20,28 @@ public class Pagamento {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @Column(nullable = false, length = 20)
-    private String numero;
-
-    @Column(nullable = false, precision = 19, scale = 2) //precision = tamanho, scale = casas decimais
-    private BigDecimal saldo;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @Column(nullable = false)
+    @JoinColumn(name = "conta_id", foreignKey = @ForeignKey(name = "fk_pagamento_conta"))
+    private Conta conta;
 
     @Column(nullable = false)
-    private boolean ativa;
+    private String boleto;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cliente_id", foreignKey = @ForeignKey(name = "fk_conta_cliente"))
-    private Cliente cliente;
+    @Column(precision = 19, scale = 2)
+    private BigDecimal valorPago;
+
+    @Column(nullable = false)
+    private LocalDateTime dataPagamento;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private StatusPagamento status;
+
+    @ManyToMany
+    @JoinTable(name = "pagamento_taxa",
+            joinColumns = @JoinColumn(name = "pagamento_id"),
+            inverseJoinColumns = @JoinColumn(name = "taxa_id")
+    )
+    private Set<Taxa> taxas;
 }
