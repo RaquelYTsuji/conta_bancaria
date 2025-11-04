@@ -20,7 +20,8 @@ public class Taxa {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    private String descricao;
+    @Enumerated(EnumType.STRING)
+    private DescricaoTaxa descricao;
 
     @Column(precision = 10, scale = 4)
     private BigDecimal percentual;

@@ -1,20 +1,22 @@
 package com.senai.conta_bancaria.application.dto;
 
 import com.senai.conta_bancaria.domain.entity.Conta;
+import com.senai.conta_bancaria.domain.entity.Pagamento;
 import com.senai.conta_bancaria.domain.entity.StatusPagamento;
+import com.senai.conta_bancaria.domain.entity.Taxa;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.HashSet;
+import java.util.List;
 
 public record PagamentoDTO(
         @Schema(description = "Conta para pagamento", example = "Nome")
-        Conta conta,
+        ContaResumoDTO contaDTO,
         @NotNull
         @NotBlank
         @Size(min = 11, max = 11)
@@ -22,35 +24,36 @@ public record PagamentoDTO(
         String boleto,
         @Schema(description = "Valor pago", example = "123")
         BigDecimal valorPago,
-        @Schema(description = "Data do pagamento")
-        LocalDateTime dataPagamento,
-        @NotNull
-        @NotBlank
-        @Schema(description = "Status do pagamento", example = "SUCESSO")
-        StatusPagamento status,
+//        @Schema(description = "Data do pagamento")
+//        LocalDateTime dataPagamento,
+//        @NotNull
+//        @NotBlank
+//        @Schema(description = "Status do pagamento", example = "SUCESSO")
+//        StatusPagamento status,
         @NotNull
         @Schema(description = "Taxas do pagamento")
-        Set<TaxaDTO> taxas
+        List<TaxaDTO> taxas
 ) {
-//    public Pagamento toEntity() {
-//        return Pagamento.builder()
-//                .conta(this.conta)
-//                .boleto(this.boleto)
-//                .valorPago(this.valorPago)
-//                .dataPagamento()
-//                .ativo(true)
-//                .build();
-//    }
-//
-//    public static ClienteResponseDTO fromEntity(Cliente cliente) {
-//            List<ContaResumoDTO> contas = cliente.getContas().stream()
-//                    .map(ContaResumoDTO::fromEntity)
-//                    .toList();
-//            return new ClienteResponseDTO(
-//                    cliente.getId(),
-//                    cliente.getNome(),
-//                    cliente.getCpf(),
-//                    contas
-//            );
-//    }
+    public Pagamento toEntity() {
+            List<Taxa> listTaxas = this.taxas.stream().map(TaxaDTO::toEntity).toList();
+            Conta conta = this.toEntity().getConta();
+        return Pagamento.builder()
+                .conta(conta)
+                .boleto(this.boleto)
+                .valorPago(this.valorPago)
+                .dataPagamento(LocalDateTime.now())
+                .taxas(new HashSet<>(listTaxas))
+                .build();
+    }
+
+    public static PagamentoDTO fromEntity(Pagamento pagamento) {
+            return new PagamentoDTO(
+                    ContaResumoDTO.fromEntity(pagamento.getConta()),
+                    pagamento.getBoleto(),
+                    pagamento.getValorPago(),
+//                    pagamento.getDataPagamento(),
+//                    pagamento.getStatus(),
+                    pagamento.getTaxas().stream().map(TaxaDTO::fromEntity).toList()
+            );
+    }
 }

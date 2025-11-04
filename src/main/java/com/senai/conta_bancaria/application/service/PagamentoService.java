@@ -1,11 +1,11 @@
 package com.senai.conta_bancaria.application.service;
 
-import com.senai.conta_bancaria.application.dto.ClienteRegistroDTO;
-import com.senai.conta_bancaria.application.dto.ClienteResponseDTO;
+import com.senai.conta_bancaria.application.dto.PagamentoDTO;
 import com.senai.conta_bancaria.domain.entity.Cliente;
-import com.senai.conta_bancaria.domain.exceptions.ContaMesmoTipoException;
-import com.senai.conta_bancaria.domain.exceptions.EntidadeNaoEncontradaException;
+import com.senai.conta_bancaria.domain.entity.StatusPagamento;
+import com.senai.conta_bancaria.domain.exceptions.BoletoPagoException;
 import com.senai.conta_bancaria.domain.repository.PagamentoRepository;
+import com.senai.conta_bancaria.domain.service.PagamentoDomainService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,58 +17,29 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PagamentoService {
     private final PagamentoRepository pagamentoRepository;
+    private final PagamentoDomainService pagamentoDomainService;
 
-    public ClienteResponseDTO registrarClienteOuAnexarConta(ClienteRegistroDTO dto) {
-        var cliente = clienteRepository.findByCpfAndAtivoTrue(dto.cpf())
-                .orElseGet(() -> clienteRepository.save(dto.toEntity()));
+    public PagamentoDTO registrarPagamento(PagamentoDTO dto) {
+        //TODO: cliente do pagamento
+        if(pagamentoRepository.existsByContaAndBoletoAndStatus(dto.contaDTO().toEntity(new Cliente()), dto.boleto(), StatusPagamento.SUCESSO)){
+            throw new BoletoPagoException();
+        }
 
-        var contas = cliente.getContas();
-        var novaConta = dto.contaDTO().toEntity(cliente);
+        var pagamento = pagamentoDomainService.pagamento(dto.toEntity());
 
-        boolean temTipo = contas.stream().anyMatch(c -> c.getClass()
-                .equals(novaConta.getClass()) && c.isAtiva());
-
-        if(temTipo)
-            throw new ContaMesmoTipoException();
-
-        cliente.getContas().add(novaConta);
-        cliente.setSenha(passwordEncoder.encode(dto.senha()));
-        return ClienteResponseDTO.fromEntity(clienteRepository.save(cliente));
+        return PagamentoDTO.fromEntity(pagamentoRepository.save(pagamento));
     }
 
     @Transactional(readOnly = true)
-    public List<ClienteResponseDTO> listarClientesAtivos() {
-        return clienteRepository.findAllByAtivoTrue()
+    public List<PagamentoDTO> listarPagamentos() {
+        return pagamentoRepository.findAll()
                 .stream()
-                .map(ClienteResponseDTO::fromEntity)
+                .map(PagamentoDTO::fromEntity)
                 .toList();
     }
 
     @Transactional(readOnly = true)
-    public ClienteResponseDTO buscarClienteAtivoPorCpf(String cpf) {
-        return ClienteResponseDTO.fromEntity(buscarClientePorCpfEAtivoTrue(cpf));
-    }
-
-    public ClienteResponseDTO atualizarCliente(String cpf, ClienteRegistroDTO dto) {
-        Cliente cliente = buscarClientePorCpfEAtivoTrue(cpf);
-
-        cliente.setNome(dto.nome());
-        cliente.setCpf(dto.cpf());
-
-        Cliente atualizado = clienteRepository.save(cliente);
-        return ClienteResponseDTO.fromEntity(atualizado);
-    }
-
-    public void desativarCliente(String cpf) {
-        Cliente cliente = buscarClientePorCpfEAtivoTrue(cpf);
-
-        cliente.setAtivo(false);
-        cliente.getContas().forEach(conta -> conta.setAtiva(false));
-        clienteRepository.save(cliente);
-    }
-
-    private Cliente buscarClientePorCpfEAtivoTrue(String cpf){
-        return clienteRepository.findByCpfAndAtivoTrue(cpf).orElseThrow(
-                () -> new EntidadeNaoEncontradaException("Cliente"));
+    public PagamentoDTO buscarPagamentoPorBoleto(String boleto) {
+        return PagamentoDTO.fromEntity(pagamentoRepository.findByBoleto(boleto));
     }
 }
