@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.List;
 
-@Tag(name = "Conta", description = "Gerenciamento de contas dos clientes do banco")
+@Tag(name = "Pagamento", description = "Gerenciamento de pagamentos dos clientes do banco")
 @RestController
-@RequestMapping("/conta")
+@RequestMapping("/pagamento")
 @RequiredArgsConstructor
 public class PagamentoController {
     private final PagamentoService pagamentoService;

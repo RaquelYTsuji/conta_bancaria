@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 public record TaxaDTO(
         @NotNull
         @NotBlank
-        @Schema(description = "Descricao da taxa", example = "Descricao")
+        @Schema(description = "Descricao da taxa", example = "IOF")
         DescricaoTaxa descricao,
         @NotNull
         @NotBlank

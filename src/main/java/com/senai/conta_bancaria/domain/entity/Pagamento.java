@@ -24,7 +24,6 @@ public class Pagamento {
     private String id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @Column(nullable = false)
     @JoinColumn(name = "conta_id", foreignKey = @ForeignKey(name = "fk_pagamento_conta"))
     private Conta conta;
 
