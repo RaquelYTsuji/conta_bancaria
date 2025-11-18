@@ -13,17 +13,18 @@ import java.math.BigDecimal;
 public class PagamentoDomainService {
     public Pagamento pagamento(Pagamento pagamento){
         try {
-            BigDecimal taxasSomadas = BigDecimal.valueOf(0.0);
-            BigDecimal taxas;
+            BigDecimal valorTaxas = BigDecimal.valueOf(0.0);
+            BigDecimal valorFixo = BigDecimal.valueOf(0.0);
 
-            //TODO: taxas
-//            pagamento.getTaxas().forEach(taxa -> {
-//                taxas = taxa.getPercentual().add(BigDecimal.valueOf(1));
-//                taxasSomadas = porcentagem.multiply(taxasSomadas);
-//            });
+            pagamento.getTaxas().forEach(taxa -> {
+                valorTaxas.add(pagamento.getValorPago().multiply(taxa.getPercentual()));
+            });
 
-            var valorFinal = pagamento.getValorPago().add(pagamento.getValorPago().multiply(taxasSomadas));
-            pagamento.getConta().sacar(valorFinal);
+            pagamento.getTaxas().forEach(taxa -> {
+                valorFixo.add(taxa.getValorFixo());
+            });
+
+            pagamento.getConta().sacar(valorTaxas.add(valorFixo));
             pagamento.setStatus(StatusPagamento.SUCESSO);
         } catch (SaldoInsuficienteException ex){
             pagamento.setStatus(StatusPagamento.SALDO_INSUFICIENTE);
