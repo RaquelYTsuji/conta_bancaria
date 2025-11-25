@@ -16,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -33,18 +35,15 @@ public class PagamentoService {
             throw new BoletoPagoException();
         }
 
-        HashSet<Taxa> taxas = new HashSet<>();
-        dto.taxas().forEach(taxa -> {
-            var t = taxaRepository.findByDescricao(taxa.descricao())
-                    .orElseThrow(() -> new EntidadeNaoEncontradaException("Taxa"));
-            taxas.add(t);
-        });
+        Set<Taxa> taxas = dto.taxas().stream()
+                .map(t -> taxaRepository.findByDescricao(t.descricao())
+                        .orElseThrow(() -> new EntidadeNaoEncontradaException("Taxa")))
+                .collect(Collectors.toSet());
 
-        var pagamento = pagamentoDomainService.pagamento(dto.toEntity(conta, taxas));
+        var pagamentoEntity = dto.toEntity(conta, taxas);
+        pagamentoEntity.setTaxas(new HashSet<>(pagamentoEntity.getTaxas()));
+        var pagamento = pagamentoDomainService.pagamento(pagamentoEntity);
 
-        if(pagamento.getStatus() == StatusPagamento.SUCESSO){
-            pagamento.setDataPagamento(LocalDateTime.now());
-        }
         return PagamentoDTO.fromEntity(pagamentoRepository.save(pagamento));
     }
 

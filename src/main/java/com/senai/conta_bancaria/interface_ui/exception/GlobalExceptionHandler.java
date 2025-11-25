@@ -148,4 +148,15 @@ public class GlobalExceptionHandler {
                 request.getRequestURI()
         );
     }
+
+    @ExceptionHandler(BoletoPagoException.class)
+    public ProblemDetail handleGeneralException (BoletoPagoException ex,
+                                                 HttpServletRequest request) {
+        return ProblemDetailUtils.buildProblem(
+                HttpStatus.BAD_REQUEST,
+                "Boleto já foi pago",
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+    }
 }

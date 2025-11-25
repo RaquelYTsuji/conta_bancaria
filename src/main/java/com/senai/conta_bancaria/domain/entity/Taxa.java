@@ -32,6 +32,6 @@ public class Taxa {
     @Column(precision = 19, scale = 2)
     private BigDecimal valorFixo;
 
-    @ManyToMany(mappedBy = "taxas")
-    private Set<Pagamento> pagamentos;
+    @ManyToMany
+    private Set<Taxa> taxas;
 }

@@ -33,11 +33,7 @@ public class PagamentoController {
                             schema = @Schema(implementation = PagamentoDTO.class),
                             examples = @ExampleObject(name = "Exemplo válido", value = """
                                         {
-                                            "contaDTO": {
-                                                     "tipoConta": "CONTA_POUPANCA",
-                                                     "numero": 1234,
-                                                     "saldo": 1000
-                                             },
+                                            "numeroConta": 1234,
                                              "boleto": "123",
                                              "valorPago": 123,
                                              "taxas": [

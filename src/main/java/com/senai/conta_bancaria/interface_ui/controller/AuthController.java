@@ -24,7 +24,7 @@ public class AuthController {
     private final AuthService auth;
 
     @Operation(
-            summary = "Logar um novo serviço",
+            summary = "Logar um novo usuario",
             description = "Realiza o login do usuário e retorna um token de acesso",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     required = true,
