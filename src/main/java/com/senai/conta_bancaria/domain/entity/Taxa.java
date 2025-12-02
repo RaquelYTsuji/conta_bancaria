@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -15,9 +16,6 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "taxa", uniqueConstraints = {
-        @UniqueConstraint(name = "uk_taxa_descricao", columnNames = "descricao")}
-)
 public class Taxa {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -26,12 +24,12 @@ public class Taxa {
     @Enumerated(EnumType.STRING)
     private DescricaoTaxa descricao;
 
+    @Enumerated(EnumType.STRING)
+    private List<TipoPagamento> tipoPagamento;
+
     @Column(precision = 10, scale = 4)
     private BigDecimal percentual;
 
     @Column(precision = 19, scale = 2)
     private BigDecimal valorFixo;
-
-    @ManyToMany
-    private Set<Taxa> taxas;
 }

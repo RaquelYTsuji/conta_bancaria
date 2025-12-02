@@ -6,8 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-
 @Entity
 @Data
 @AllArgsConstructor
@@ -22,7 +20,6 @@ public class DispositivoIoT {
     private String id;
 
     @Column(nullable = false)
-    @GeneratedValue(strategy = GenerationType.UUID)
     private String codigoSerial;
 
     @Column(nullable = false)
@@ -32,5 +29,6 @@ public class DispositivoIoT {
     private boolean ativo;
 
     @OneToOne
+    @JoinColumn(name = "cliente_id", foreignKey = @ForeignKey(name = "fk_dispositivo_cliente"))
     private Cliente cliente;
 }

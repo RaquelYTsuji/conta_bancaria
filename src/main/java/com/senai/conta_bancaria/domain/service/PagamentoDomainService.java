@@ -10,17 +10,16 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class PagamentoDomainService {
-    public Pagamento pagamento(Pagamento pagamento){
+    public Pagamento pagamento(Pagamento pagamento, List<Taxa> taxas){
         try {
             BigDecimal valorTaxas = BigDecimal.ZERO;
             BigDecimal valorFixo = BigDecimal.ZERO;
-
-            Set<Taxa> taxas = new HashSet<>(pagamento.getTaxas());
 
             for (Taxa taxa : taxas) {
                 valorTaxas = valorTaxas.add(pagamento.getValorPago().multiply(taxa.getPercentual()));
