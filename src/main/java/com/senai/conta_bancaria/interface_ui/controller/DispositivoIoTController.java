@@ -2,6 +2,7 @@ package com.senai.conta_bancaria.interface_ui.controller;
 
 import com.senai.conta_bancaria.application.dto.DispositivoIoTDTO;
 import com.senai.conta_bancaria.application.dto.TaxaDTO;
+import com.senai.conta_bancaria.application.service.DispositivoIoTService;
 import com.senai.conta_bancaria.application.service.TaxaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -23,7 +24,7 @@ import java.util.List;
 @RequestMapping("/dispositivoIoT")
 @RequiredArgsConstructor
 public class DispositivoIoTController {
-    private final TaxaService taxaService;
+    private final DispositivoIoTService dispositivoIoTService;
 
 //    @Operation(
 //            summary = "Cadastrar um novo dispositivo IoT",
