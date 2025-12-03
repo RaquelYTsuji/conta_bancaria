@@ -7,20 +7,20 @@ import jakarta.validation.constraints.NotNull;
 
 public record DispositivoIoTDTO(
         @NotNull
-        @Schema(description = "Descricao da taxa", example = "IOF")
+        @Schema(description = "Codigo serial do dispositivo", example = "123")
         String codigoSerial,
         @NotNull
-        @Schema(description = "Tipo de pagamentos que usam a taxa", example = "LUZ")
+        @Schema(description = "Chave publica do dispositivo", example = "123")
         String chavePublica,
         @NotNull
-        @Schema(description = "Percentual da taxa", example = "0.1")
-        Cliente cliente
+        @Schema(description = "Cpf do cliente do dispositivo", example = "12345678910")
+        String cpfCliente
 ) {
-        public DispositivoIoT toEntity() {
+        public DispositivoIoT toEntity(Cliente cliente) {
                 return DispositivoIoT.builder()
                         .codigoSerial(this.codigoSerial)
                         .chavePublica(this.chavePublica)
-                        .cliente(this.cliente)
+                        .cliente(cliente)
                         .ativo(true)
                         .build();
         }
@@ -29,7 +29,7 @@ public record DispositivoIoTDTO(
                 return new DispositivoIoTDTO(
                         dispositivoIoT.getCodigoSerial(),
                         dispositivoIoT.getChavePublica(),
-                        dispositivoIoT.getCliente()
+                        dispositivoIoT.getCliente().getCpf()
                 );
         }
 }
